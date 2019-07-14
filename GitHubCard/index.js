@@ -2,10 +2,13 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+
+const cards = document.querySelector('.cards')
+
 axios.get('https://api.github.com/users/brettmadrid')
 .then(res => {
-  console.log(res)
-  document.querySelector('.cards').appendChild(cardsComponent(res.data))
+  console.log(res.data)
+  cards.appendChild(cardsComponent(res.data))
 }).catch(err => {
   console.log(err)
 })
@@ -37,11 +40,20 @@ const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigkne
 followersArray.forEach(follower => {
   axios.get(`https://api.github.com/users/${follower}`)
   .then(res => {
-    document.querySelector('.cards').appendChild(cardsComponent(res.data))
+    cards.appendChild(cardsComponent(res.data))
   }).catch(err => {
     console.log(err)
   })
 })
+
+// followersArray.forEach(follower => {
+//   axios.get(`https://api.github.com/users/${follower}`)
+//   .then(res => {
+//     document.querySelector('.cards').appendChild(cardsComponent(res.data))
+//   }).catch(err => {
+//     console.log(err)
+//   })
+// })
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -61,6 +73,7 @@ followersArray.forEach(follower => {
 </div>
 */
 function cardsComponent(gitObject) {
+  // first create html tags
   const card = document.createElement('div')
   const image = document.createElement('img')
   const cardInfo = document.createElement('div')
@@ -72,20 +85,12 @@ function cardsComponent(gitObject) {
   const followers = document.createElement('p')
   const following = document.createElement('p')
   const bio = document.createElement('p')
-
-  image.src = gitObject.avatar_url;
-  name.textContent = `Name: ${gitObject.name}`;
-  username.textContent = `Username: ${gitObject.login}`;
-  location.textContent = `Location: ${gitObject.location}`
-  url.textContent = gitObject.html_url;
-  url.href = gitObject.html_url;
-  followers.textContent = `Followers: ${gitObject.followers}`;
-  following.textContent = `Following: ${gitObject.following}`;
-  bio.textContent = gitObject.bio;
-
+  
+  
+  // assign parent/child html tag relationships
   card.appendChild(image)
   card.appendChild(cardInfo)
-
+  
   cardInfo.appendChild(name)
   cardInfo.appendChild(username)
   cardInfo.appendChild(location)
@@ -93,15 +98,27 @@ function cardsComponent(gitObject) {
   cardInfo.appendChild(followers)
   cardInfo.appendChild(following)
   cardInfo.appendChild(bio)
-
+  
   profile.appendChild(url)
-
+  
+  // create class names on html tags
   card.classList.add('card')
   cardInfo.classList.add('card-info')
   name.classList.add('name')
   username.classList.add('username')
-
+  
+  // assign axios data to the html
+  image.src = gitObject.avatar_url;
+  name.textContent = gitObject.name;
+  username.textContent = gitObject.login;
+  location.textContent = gitObject.location;
+  url.textContent = gitObject.html_url;
+  url.href = gitObject.html_url;
+  followers.textContent = `Followers: ${gitObject.followers}`;
+  following.textContent = `Following: ${gitObject.following}`;
+  bio.textContent = gitObject.bio;
+  
   return card;
-
+  
 }
 
